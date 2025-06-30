@@ -1,5 +1,6 @@
 package com.example.my_first_telegram_bot.handler;
 
+import ch.qos.logback.core.util.StringUtil;
 import com.example.my_first_telegram_bot.bot.State;
 import com.example.my_first_telegram_bot.model.Question;
 import com.example.my_first_telegram_bot.model.User;
@@ -14,7 +15,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.io.Serializable;
 import java.util.List;
 
-import static ch.qos.logback.core.util.StringUtil.capitalizeFirstLetter;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createInlineKeyboardButton;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createMessageTemplate;
 
@@ -32,7 +32,7 @@ public class QuizHandler implements Handler {
 
         final SendMessage questionMessage = createMessageTemplate(user);
         final Question randomQuestion = questionService.findRandomQuestion();
-        questionMessage.setText(capitalizeFirstLetter(randomQuestion.getQuestion()));
+        questionMessage.setText(StringUtil.capitalizeFirstLetter(randomQuestion.getQuestion()));
 
         final InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         final InlineKeyboardButton optionOneButton =

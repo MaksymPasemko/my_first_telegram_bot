@@ -18,7 +18,7 @@ import static com.example.my_first_telegram_bot.util.TelegramUtil.createMessageT
 @Component
 @RequiredArgsConstructor
 public class StartHandler implements Handler {
-    @Value("$bot.name")
+    @Value("${bot.name}")
     private String botUsername;
     private final UserRepository userRepository;
 

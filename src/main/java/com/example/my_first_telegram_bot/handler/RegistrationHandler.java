@@ -29,8 +29,6 @@ public class RegistrationHandler implements Handler {
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         if (message.equalsIgnoreCase(NAME_ACCEPT) || message.equalsIgnoreCase(NAME_CHANGE_CANCEL)) {
-            user.setBotState(State.PLAYING_QUIZ);
-            userService.createOrUpdateUser(user);
             return accept(user);
         } else if (message.equalsIgnoreCase(NAME_CHANGE)) {
             return changeName(user);
