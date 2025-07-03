@@ -5,6 +5,8 @@ import com.example.my_first_telegram_bot.bot.State;
 import com.example.my_first_telegram_bot.model.Question;
 import com.example.my_first_telegram_bot.model.User;
 import com.example.my_first_telegram_bot.service.QuestionService;
+import com.example.my_first_telegram_bot.service.UserService;
+import com.example.my_first_telegram_bot.util.QuestionFolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -24,15 +26,23 @@ public class QuizHandler implements Handler {
     public static final String OPTION_ONE = "/option_one";
     public static final String OPTION_TWO = "/option_two";
     public static final String OPTION_THREE = "/option_three";
-    public static final String CORRECT_ANSWER = "/option_three";
     private final QuestionService questionService;
+    private final UserService userService;
+    private final QuestionFolder questionFolder;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-
         final SendMessage questionMessage = createMessageTemplate(user);
+
+        if(questionService.countQuestions() == 0){
+            questionMessage.setText("Game over.Your score is " + user.getScore() +
+                    "Your best score is " + user.getHighScore());
+        }
         final Question randomQuestion = questionService.findRandomQuestion();
+        questionService.delete(randomQuestion);
+
         questionMessage.setText(StringUtil.capitalizeFirstLetter(randomQuestion.getQuestion()));
+        questionFolder.setLastQuestion(user.getChatId(),randomQuestion);
 
         final InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         final InlineKeyboardButton optionOneButton =
@@ -47,19 +57,9 @@ public class QuizHandler implements Handler {
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtons));
         questionMessage.setReplyMarkup(inlineKeyboardMarkup);
 
-        final SendMessage answerMessage = createMessageTemplate(user);
-        final String answer = handleAnswer(user, message);
-        answerMessage.setText(answer);
-
-        return List.of(questionMessage, answerMessage);
-    }
-
-    public String handleAnswer(User user, String message) {
-        if (message.equalsIgnoreCase(CORRECT_ANSWER)) {
-            user.setScore(user.getScore() + 1);
-            return "Answer is correct";
-        }
-        return "Answer is wrong";
+        user.setBotState(State.ANSWER);
+        userService.createOrUpdateUser(user);
+        return List.of(questionMessage);
     }
 
     @Override

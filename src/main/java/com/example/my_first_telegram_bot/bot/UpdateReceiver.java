@@ -24,7 +24,7 @@ public class UpdateReceiver {
         try {
             if (isMessageWithText(update)) {
                 final Message message = update.getMessage();
-                final Long chatId = message.getFrom().getId();
+                final Long chatId = message.getChatId();
 
                 final User user = userRepository.getByChatId(chatId)
                         .orElseGet(() -> userRepository.save(new User(chatId)));
@@ -32,7 +32,7 @@ public class UpdateReceiver {
                 return getHandlerByState(user.getBotState()).handle(user, message.getText());
             } else if (update.hasCallbackQuery()) {
                 final CallbackQuery callbackQuery = update.getCallbackQuery();
-                final Long chatId = callbackQuery.getFrom().getId();
+                final Long chatId = callbackQuery.getMessage().getChatId();
                 final User user = userRepository.getByChatId(chatId)
                         .orElseGet(() -> userRepository.save(new User(chatId)));
 

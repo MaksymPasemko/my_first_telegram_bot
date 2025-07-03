@@ -37,7 +37,7 @@ public class RegistrationHandler implements Handler {
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> accept(User user) {
-        user.setBotState(State.NONE);
+        user.setBotState(State.PLAYING_QUIZ);
         userService.createOrUpdateUser(user);
 
         final InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();

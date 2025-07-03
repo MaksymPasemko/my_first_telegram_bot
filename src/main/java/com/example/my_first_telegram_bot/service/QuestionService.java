@@ -20,6 +20,14 @@ public class QuestionService {
         return questionRepository.findRandomQuestion();
     }
 
+    public Long countQuestions() {
+        return questionRepository.count();
+    }
+
+    public void delete(Question question) {
+        questionRepository.delete(question);
+    }
+
     public void saveAll(List<Question> questions) {
         questionRepository.saveAll(questions);
     }
