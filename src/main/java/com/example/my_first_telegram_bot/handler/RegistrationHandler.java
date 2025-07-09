@@ -1,5 +1,6 @@
 package com.example.my_first_telegram_bot.handler;
 
+import com.example.my_first_telegram_bot.bot.Button;
 import com.example.my_first_telegram_bot.bot.State;
 import com.example.my_first_telegram_bot.model.User;
 import com.example.my_first_telegram_bot.service.UserService;
@@ -13,24 +14,20 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.io.Serializable;
 import java.util.List;
 
+import static com.example.my_first_telegram_bot.bot.Button.*;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createInlineKeyboardButton;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createMessageTemplate;
 
 @Component
 @RequiredArgsConstructor
 public class RegistrationHandler implements Handler {
-    public static final String NAME_ACCEPT = "/enter_name_accept";
-    public static final String NAME_CHANGE = "/enter_name";
-    public static final String NAME_CHANGE_CANCEL = "/enter_name_cancel";
-    public static final String START_QUIZ = "/start_quiz";
-
     private final UserService userService;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-        if (message.equalsIgnoreCase(NAME_ACCEPT) || message.equalsIgnoreCase(NAME_CHANGE_CANCEL)) {
+        if (message.equalsIgnoreCase(NAME_ACCEPT.getText()) || message.equalsIgnoreCase(NAME_CHANGE_CANCEL.getText())) {
             return accept(user);
-        } else if (message.equalsIgnoreCase(NAME_CHANGE)) {
+        } else if (message.equalsIgnoreCase(NAME_CHANGE.getText())) {
             return changeName(user);
         }
         return checkName(user, message);
@@ -93,7 +90,7 @@ public class RegistrationHandler implements Handler {
     }
 
     @Override
-    public List<String> operatedCallBackQuery() {
-        return List.of(NAME_ACCEPT, NAME_CHANGE, NAME_CHANGE_CANCEL);
+    public List<Button> operatedCallBackQuery() {
+        return List.of(NAME_ACCEPT, NAME_CHANGE, NAME_CHANGE_CANCEL,START_QUIZ);
     }
 }

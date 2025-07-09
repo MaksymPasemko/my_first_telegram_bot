@@ -1,5 +1,6 @@
 package com.example.my_first_telegram_bot.handler;
 
+import com.example.my_first_telegram_bot.bot.Button;
 import com.example.my_first_telegram_bot.bot.State;
 import com.example.my_first_telegram_bot.model.User;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -12,5 +13,5 @@ public interface Handler {
 
     State operatedBotState();
 
-    List<String> operatedCallBackQuery();
+    List<Button> operatedCallBackQuery();
 }

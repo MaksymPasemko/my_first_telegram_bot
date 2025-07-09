@@ -1,5 +1,6 @@
 package com.example.my_first_telegram_bot.handler;
 
+import com.example.my_first_telegram_bot.bot.Button;
 import com.example.my_first_telegram_bot.bot.State;
 import com.example.my_first_telegram_bot.model.User;
 import com.example.my_first_telegram_bot.repository.UserRepository;
@@ -42,7 +43,7 @@ public class StartHandler implements Handler {
     }
 
     @Override
-    public List<String> operatedCallBackQuery() {
+    public List<Button> operatedCallBackQuery() {
         return Collections.emptyList();
     }
 }

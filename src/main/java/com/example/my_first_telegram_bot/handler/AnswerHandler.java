@@ -1,5 +1,6 @@
 package com.example.my_first_telegram_bot.handler;
 
+import com.example.my_first_telegram_bot.bot.Button;
 import com.example.my_first_telegram_bot.bot.State;
 import com.example.my_first_telegram_bot.model.Question;
 import com.example.my_first_telegram_bot.model.User;
@@ -15,6 +16,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.io.Serializable;
 import java.util.List;
 
+import static com.example.my_first_telegram_bot.bot.Button.*;
+import static com.example.my_first_telegram_bot.bot.State.PLAYING_QUIZ;
 import static com.example.my_first_telegram_bot.handler.QuizHandler.*;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createInlineKeyboardButton;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createMessageTemplate;
@@ -25,8 +28,7 @@ import static com.example.my_first_telegram_bot.util.TelegramUtil.createMessageT
 public class AnswerHandler implements Handler {
     private final QuestionFolder questionFolder;
     private final UserService userService;
-    public static final String STOP_QUIZ = "/stop_quiz";
-    public static final String NEXT_QUESTION = "/next_question";
+
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
@@ -45,19 +47,21 @@ public class AnswerHandler implements Handler {
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtons));
         answerMessage.setReplyMarkup(inlineKeyboardMarkup);
 
-        user.setBotState(State.PLAYING_QUIZ);
+        user.setBotState(PLAYING_QUIZ);
         userService.createOrUpdateUser(user);
         return List.of(answerMessage);
     }
 
     private boolean isAnswerCorrect(String message,Question question){
         final String correctAnswer = question.getCorrectAnswer();
-        return switch (message.toLowerCase()){
-            case OPTION_ONE -> correctAnswer.equalsIgnoreCase(question.getOptionOne());
-            case OPTION_TWO -> correctAnswer.equalsIgnoreCase(question.getOptionTwo());
-            case OPTION_THREE -> correctAnswer.equalsIgnoreCase(question.getOptionThree());
-            default -> false;
-        };
+        if (message.toLowerCase().equals(OPTION_ONE.getText())) {
+            return correctAnswer.equalsIgnoreCase(question.getOptionOne());
+        } else if (message.toLowerCase().equals(OPTION_TWO.getText())) {
+            return correctAnswer.equalsIgnoreCase(question.getOptionTwo());
+        } else if (message.toLowerCase().equals(OPTION_THREE.getText())) {
+            return correctAnswer.equalsIgnoreCase(question.getOptionThree());
+        }
+        return false;
     }
 
     private SendMessage setAnswerMessage(User user, boolean isCorrect) {
@@ -81,7 +85,7 @@ public class AnswerHandler implements Handler {
     }
 
     @Override
-    public List<String> operatedCallBackQuery() {
+    public List<Button> operatedCallBackQuery() {
         return List.of(OPTION_ONE,OPTION_TWO,OPTION_THREE,STOP_QUIZ,NEXT_QUESTION);
     }
 }

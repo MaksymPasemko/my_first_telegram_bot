@@ -1,6 +1,7 @@
 package com.example.my_first_telegram_bot.handler;
 
 import ch.qos.logback.core.util.StringUtil;
+import com.example.my_first_telegram_bot.bot.Button;
 import com.example.my_first_telegram_bot.bot.State;
 import com.example.my_first_telegram_bot.model.Question;
 import com.example.my_first_telegram_bot.model.User;
@@ -17,31 +18,26 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.io.Serializable;
 import java.util.List;
 
+import static com.example.my_first_telegram_bot.bot.Button.*;
 import static com.example.my_first_telegram_bot.bot.State.IDLE;
-import static com.example.my_first_telegram_bot.handler.AnswerHandler.STOP_QUIZ;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createInlineKeyboardButton;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createMessageTemplate;
 
 @Component
 @RequiredArgsConstructor
 public class QuizHandler implements Handler {
-    public static final String HELP = "/help";
-    public static final String OPTION_ONE = "/option_one";
-    public static final String OPTION_TWO = "/option_two";
-    public static final String OPTION_THREE = "/option_three";
-    public static final String START_QUIZ = "/start_quiz";
     private final QuestionService questionService;
     private final UserService userService;
     private final QuestionFolder questionFolder;
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-        if (message.equalsIgnoreCase(STOP_QUIZ)){
-            return stopQuiz(user,message);
+        if (message.equalsIgnoreCase(STOP_QUIZ.getText())){
+            return stopQuiz(user);
         }
         return newQuestion(user);
     }
 
-    private List<PartialBotApiMethod<? extends Serializable>> stopQuiz(User user,String message){
+    private List<PartialBotApiMethod<? extends Serializable>> stopQuiz(User user){
         final SendMessage resultsMessage = createMessageTemplate(user);
         resultsMessage.setText(String.format("Quiz stopped%nYou got score: " + user.getScore()
                 + "%nYour high score is " + user.getHighScore()));
@@ -102,7 +98,7 @@ public class QuizHandler implements Handler {
     }
 
     @Override
-    public List<String> operatedCallBackQuery() {
+    public List<Button> operatedCallBackQuery() {
         return List.of(OPTION_ONE, OPTION_TWO, OPTION_THREE,START_QUIZ,STOP_QUIZ);
     }
 }

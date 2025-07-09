@@ -1,5 +1,6 @@
 package com.example.my_first_telegram_bot.handler;
 
+import com.example.my_first_telegram_bot.bot.Button;
 import com.example.my_first_telegram_bot.bot.State;
 import com.example.my_first_telegram_bot.model.User;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
+import static com.example.my_first_telegram_bot.bot.Button.NAME_CHANGE;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createInlineKeyboardButton;
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createMessageTemplate;
 
@@ -22,7 +24,7 @@ public class HelpHandler implements Handler {
         final InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         final List<InlineKeyboardButton> inlineKeyboardButtonRowOne =
-                List.of(createInlineKeyboardButton("Change name", RegistrationHandler.NAME_CHANGE));
+                List.of(createInlineKeyboardButton("Change name", NAME_CHANGE));
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtonRowOne));
 
         final SendMessage sendMessage = createMessageTemplate(user);
@@ -38,7 +40,7 @@ public class HelpHandler implements Handler {
     }
 
     @Override
-    public List<String> operatedCallBackQuery() {
-        return Collections.emptyList();
+    public List<Button> operatedCallBackQuery() {
+        return List.of(NAME_CHANGE);
     }
 }

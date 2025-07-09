@@ -1,5 +1,6 @@
 package com.example.my_first_telegram_bot.util;
 
+import com.example.my_first_telegram_bot.bot.Button;
 import com.example.my_first_telegram_bot.model.User;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -16,10 +17,10 @@ public class TelegramUtil {
         return sendMessage;
     }
 
-    public static InlineKeyboardButton createInlineKeyboardButton(String text, String command) {
+    public static InlineKeyboardButton createInlineKeyboardButton(String text, Button command) {
         final InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
         inlineKeyboardButton.setText(text);
-        inlineKeyboardButton.setCallbackData(command);
+        inlineKeyboardButton.setCallbackData(command.getText());
         return inlineKeyboardButton;
     }
 }
