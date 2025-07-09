@@ -37,8 +37,6 @@ public class RegistrationHandler implements Handler {
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> accept(User user) {
-        user.setBotState(State.PLAYING_QUIZ);
-        userService.createOrUpdateUser(user);
 
         final InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
@@ -51,8 +49,9 @@ public class RegistrationHandler implements Handler {
         sendMessage.setText(String.format("Your name is saved as: %s", user.getName()));
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
 
+        user.setBotState(State.PLAYING_QUIZ);
+        userService.createOrUpdateUser(user);
         return List.of(sendMessage);
-
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> changeName(User user) {

@@ -34,7 +34,7 @@ public class HelpHandler implements Handler {
 
     @Override
     public State operatedBotState() {
-        return State.NONE;
+        return State.HELP;
     }
 
     @Override

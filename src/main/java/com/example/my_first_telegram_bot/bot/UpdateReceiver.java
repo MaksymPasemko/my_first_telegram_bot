@@ -6,8 +6,6 @@ import com.example.my_first_telegram_bot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.Serializable;
@@ -21,24 +19,23 @@ public class UpdateReceiver {
     private final UserRepository userRepository;
 
     public List<PartialBotApiMethod<? extends Serializable>> handle(Update update) {
+        final Long chatId;
+        final String message;
+        final User user;
         try {
-            if (isMessageWithText(update)) {
-                final Message message = update.getMessage();
-                final Long chatId = message.getChatId();
-
-                final User user = userRepository.getByChatId(chatId)
-                        .orElseGet(() -> userRepository.save(new User(chatId)));
-
-                return getHandlerByState(user.getBotState()).handle(user, message.getText());
+            if (update.hasMessage() && update.getMessage().hasText()) {
+                message = update.getMessage().getText();
+                chatId = update.getMessage().getChatId();
             } else if (update.hasCallbackQuery()) {
-                final CallbackQuery callbackQuery = update.getCallbackQuery();
-                final Long chatId = callbackQuery.getMessage().getChatId();
-                final User user = userRepository.getByChatId(chatId)
-                        .orElseGet(() -> userRepository.save(new User(chatId)));
-
-                return getHandlerByCallbackQuery(callbackQuery.getData()).handle(user, callbackQuery.getData());
+                message = update.getCallbackQuery().getData();
+                chatId = update.getCallbackQuery().getMessage().getChatId();
+            } else {
+                throw new UnsupportedOperationException();
             }
-            throw new UnsupportedOperationException();
+            user = userRepository.getByChatId(chatId)
+                    .orElseGet(() -> userRepository.save(new User(chatId)));
+
+            return getHandlerByState(user.getBotState()).handle(user, message);
         } catch (UnsupportedOperationException e) {
             return Collections.emptyList();
         }
@@ -52,15 +49,4 @@ public class UpdateReceiver {
                 .orElseThrow(UnsupportedOperationException::new);
     }
 
-    private Handler getHandlerByCallbackQuery(String query) {
-        return handlers.stream()
-                .filter(handler -> handler.operatedCallBackQuery().stream()
-                        .anyMatch(query::startsWith))
-                .findAny()
-                .orElseThrow(UnsupportedOperationException::new);
-    }
-
-    private boolean isMessageWithText(Update update) {
-        return !update.hasCallbackQuery() && update.hasMessage() && update.getMessage().hasText();
-    }
 }
