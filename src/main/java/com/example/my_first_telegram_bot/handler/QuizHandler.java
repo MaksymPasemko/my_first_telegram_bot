@@ -41,9 +41,6 @@ public class QuizHandler implements Handler {
         final SendMessage resultsMessage = createMessageTemplate(user);
         resultsMessage.setText(String.format("Quiz stopped%nYou got score: " + user.getScore()
                 + "%nYour high score is " + user.getHighScore()));
-        user.setScore(0);
-        user.setBotState(IDLE);
-        userService.createOrUpdateUser(user);
 
         final InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
@@ -52,10 +49,13 @@ public class QuizHandler implements Handler {
         final List<InlineKeyboardButton> inlineKeyboardButtons = List.of(startQuizButton,helpButton);
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtons));
 
-        final SendMessage idleMessage = createMessageTemplate(user);
-        idleMessage.setReplyMarkup(inlineKeyboardMarkup);
+        resultsMessage.setReplyMarkup(inlineKeyboardMarkup);
 
-        return List.of(resultsMessage,idleMessage);
+        user.setScore(0);
+        user.setBotState(IDLE);
+        userService.createOrUpdateUser(user);
+
+        return List.of(resultsMessage);
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> newQuestion(User user){

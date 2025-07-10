@@ -40,7 +40,7 @@ public class AnswerHandler implements Handler {
 
         final InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        final InlineKeyboardButton stopButton = createInlineKeyboardButton("Stop",STOP_QUIZ);
+        final InlineKeyboardButton stopButton = createInlineKeyboardButton("Stop quiz",STOP_QUIZ);
         final InlineKeyboardButton nextQuestionButton = createInlineKeyboardButton("Next question",NEXT_QUESTION);
         final List<InlineKeyboardButton> inlineKeyboardButtons = List.of(stopButton,nextQuestionButton);
 
