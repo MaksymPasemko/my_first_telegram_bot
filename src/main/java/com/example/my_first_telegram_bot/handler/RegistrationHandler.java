@@ -89,8 +89,5 @@ public class RegistrationHandler implements Handler {
         return State.ENTER_NAME;
     }
 
-    @Override
-    public List<Button> operatedCallBackQuery() {
-        return List.of(NAME_ACCEPT, NAME_CHANGE, NAME_CHANGE_CANCEL,START_QUIZ);
-    }
+
 }

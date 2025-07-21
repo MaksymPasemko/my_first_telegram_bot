@@ -49,8 +49,4 @@ public class HelpHandler implements Handler {
         return State.HELP;
     }
 
-    @Override
-    public List<Button> operatedCallBackQuery() {
-        return List.of(NAME_CHANGE);
-    }
 }

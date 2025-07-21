@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 import static com.example.my_first_telegram_bot.util.TelegramUtil.createMessageTemplate;
@@ -42,8 +41,4 @@ public class StartHandler implements Handler {
         return State.START;
     }
 
-    @Override
-    public List<Button> operatedCallBackQuery() {
-        return Collections.emptyList();
-    }
 }

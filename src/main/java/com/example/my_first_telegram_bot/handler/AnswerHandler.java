@@ -84,8 +84,5 @@ public class AnswerHandler implements Handler {
         return State.ANSWER;
     }
 
-    @Override
-    public List<Button> operatedCallBackQuery() {
-        return List.of(OPTION_ONE,OPTION_TWO,OPTION_THREE,STOP_QUIZ,NEXT_QUESTION);
-    }
+
 }

@@ -97,8 +97,5 @@ public class QuizHandler implements Handler {
         return State.PLAYING_QUIZ;
     }
 
-    @Override
-    public List<Button> operatedCallBackQuery() {
-        return List.of(OPTION_ONE, OPTION_TWO, OPTION_THREE,START_QUIZ,STOP_QUIZ);
-    }
+
 }

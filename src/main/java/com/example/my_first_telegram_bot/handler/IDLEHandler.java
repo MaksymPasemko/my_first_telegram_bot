@@ -48,8 +48,5 @@ public class IDLEHandler implements Handler{
         return IDLE;
     }
 
-    @Override
-    public List<Button> operatedCallBackQuery() {
-        return List.of(START_QUIZ,Button.HELP);
-    }
+
 }
